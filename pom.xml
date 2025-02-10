@@ -90,6 +90,18 @@
         </dependency>
 
         <dependency>
+            <groupId>com.facebook.airlift</groupId>
+            <artifactId>log</artifactId>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.inject</groupId>
+                    <artifactId>guice</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
         </dependency>
@@ -379,6 +391,7 @@
             <plugin>
                 <groupId>com.googlecode.addjars-maven-plugin</groupId>
                 <artifactId>addjars-maven-plugin</artifactId>
+                <version>1.0.5</version>
                 <executions>
                     <execution>
                         <goals>

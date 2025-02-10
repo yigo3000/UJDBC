@@ -108,9 +108,14 @@ public class PrestoConnection
 //    private QueryManager qm;
 
     PrestoConnection(PrestoDriverUri uri, QueryExecutor queryExecutor)
-            throws Exception
+            throws SQLException
     {
-        server =  BogusPrestoServer.get_BogusPrestoServer();
+        try {
+            server = new BogusPrestoServer().get_BogusPrestoServer();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
         String url = format("jdbc:presto://%s", server.getAddress());
         uri = new PrestoDriverUri(url, uri.getProperties());
         uri = requireNonNull(uri, "uri is null");

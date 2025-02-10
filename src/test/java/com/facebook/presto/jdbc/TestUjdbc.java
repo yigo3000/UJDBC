@@ -23,7 +23,6 @@ import com.facebook.presto.tpch.TpchPlugin;
 import com.google.common.collect.ImmutableMap;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
@@ -51,7 +50,7 @@ public class TestUjdbc
         Logging.initialize();
     }
 
-    @BeforeMethod
+//    @BeforeMethod
     public void setupServer()
             throws Exception
     {
@@ -110,7 +109,7 @@ public class TestUjdbc
     private Connection createConnection(String extra)
             throws SQLException
     {
-        String url = format("jdbc:presto://%s/?%s", server.getAddress(), extra); //Connect to the bogus coordinator
+        String url = format("jdbc:presto://%s/?%s", "localhost:6666", extra); //Connect to the bogus coordinator
         return DriverManager.getConnection(url, "test", null);
     }
 
