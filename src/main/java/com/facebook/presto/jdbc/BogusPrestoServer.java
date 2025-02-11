@@ -15,6 +15,7 @@ package com.facebook.presto.jdbc;
 
 import com.facebook.airlift.log.Logger;
 import com.facebook.presto.Session;
+import com.facebook.presto.plugin.dm.DMPlugin;
 import com.facebook.presto.plugin.mysql.MySqlPlugin;
 import com.facebook.presto.plugin.oracle.OraclePlugin;
 import com.facebook.presto.plugin.sqlserver.SqlServerPlugin;
@@ -48,6 +49,8 @@ public class BogusPrestoServer
         queryRunner.installPlugin(new MySqlPlugin()); // 安装MySql插件，用于访问MySQL数据库
         queryRunner.installPlugin(new OraclePlugin()); // 安装Oracle插件，用于访问Oracle数据库
         queryRunner.installPlugin(new SqlServerPlugin()); // 安装SqlServer插件，用于访问SqlServer数据库
+        queryRunner.installPlugin(new DMPlugin());
+        queryRunner.createCatalog("dm1", "dm", ImmutableMap.of("connection-url", "jdbc:dm://localhost:5236", "connection-user", "SYSDBA", "connection-password", "SYSDBA_dm001"));
 //        StaticCatalogStore
         try {
             loadAllPropertiesFiles(BogusPrestoServer.class.getClassLoader());
