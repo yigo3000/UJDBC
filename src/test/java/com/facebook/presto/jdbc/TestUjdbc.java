@@ -49,45 +49,6 @@ public class TestUjdbc
     {
         Logging.initialize();
     }
-
-//    @BeforeMethod
-    public void setupServer()
-            throws Exception
-    {
-        DistributedQueryRunner distributedQueryRunner = createQueryRunner(); //Create coordinator TestingPrestoServer in 2.37s: http://127.0.0.1:41479
-        server = distributedQueryRunner.getCoordinator();
-        qm = server.getQueryManager();
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void teardownServer()
-    {
-        closeQuietly(server);
-    }
-
-    public static DistributedQueryRunner createQueryRunner()
-            throws Exception
-    {
-        Session session = testSessionBuilder()
-                .setCatalog("tpch")
-                .setSchema("tiny")
-                .build();
-
-        DistributedQueryRunner queryRunner = DistributedQueryRunner.builder(session).build(); // 建立一个虚拟的Presto服务器，具有联邦查询能力
-        try {
-            queryRunner.installPlugin(new TpchPlugin()); // 安装Tpch插件，用于访问TPC-H数据集
-            queryRunner.installPlugin(new MySqlPlugin()); // 安装MySql插件，用于访问MySQL数据库
-            queryRunner.createCatalog("tpch", "tpch", ImmutableMap.of());
-            queryRunner.createCatalog("mysql1", "mysql", ImmutableMap.of("connection-url", "jdbc:mysql://mysql.sqlpub.com:3306", "connection-user", "ytymysql", "connection-password", "0u5Tr2GELwcWP0kQ"));
-            queryRunner.createCatalog("mysql2", "mysql", ImmutableMap.of("connection-url", "jdbc:mysql://mysql.sqlpub.com:3306", "connection-user", "ytymysql", "connection-password", "0u5Tr2GELwcWP0kQ"));
-            return queryRunner;
-        }
-        catch (Exception e) {
-            queryRunner.close();
-            throw e;
-        }
-    }
-
     @Test
     public void testBasicPostPreprocess()
             throws Exception
@@ -95,14 +56,14 @@ public class TestUjdbc
         String extra = "";
         try (Connection connection = createConnection(extra)) { //
             try (Statement statement = connection.createStatement()) { // Statement是Java标准，用于执行SQL。一个Statemnet在一个时刻只能执行一个SQL。
-                try (ResultSet ignored = statement.executeQuery("select * from mysql1.ytymysql.goods")) {
+                try (ResultSet ignored = statement.executeQuery("select * from mysql3.ytymysql.goods")) {
                     printResultSet(ignored);
                 }
+                while (true) {
+                    sleep(10000);
+                    System.out.println("sleeping");
+                }
             }
-        }
-        while (true) {
-            sleep(10000);
-            System.out.println("sleeping");
         }
     }
 

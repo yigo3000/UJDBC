@@ -81,10 +81,11 @@
             <artifactId>presto-sqlserver</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.facebook.presto</groupId>-->
-<!--            <artifactId>presto-oceanbase</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.oceanbase</groupId>
+            <artifactId>oceanbase-client</artifactId>
+            <version>2.4.8</version>
+        </dependency>
 
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>

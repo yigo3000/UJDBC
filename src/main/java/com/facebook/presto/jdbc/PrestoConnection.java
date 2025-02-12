@@ -104,19 +104,22 @@ public class PrestoConnection
     private final WarningsManager warningsManager = new WarningsManager();
     private final List<QueryInterceptor> queryInterceptorInstances;
     private final boolean validateNextUriSource;
-    private TestingPrestoServer server;
-//    private QueryManager qm;
+    private static final BogusPrestoServer bogusPrestoServer = BogusPrestoServer.getInstance();
+    private static TestingPrestoServer coordinatorServer = null;
 
-    PrestoConnection(PrestoDriverUri uri, QueryExecutor queryExecutor)
-            throws SQLException
-    {
+    static {
         try {
-            server = new BogusPrestoServer().get_BogusPrestoServer();
+            coordinatorServer = bogusPrestoServer.getTestingPrestoServer();
         }
         catch (Exception e) {
             System.out.println(e);
         }
-        String url = format("jdbc:presto://%s", server.getAddress());
+    }
+
+    PrestoConnection(PrestoDriverUri uri, QueryExecutor queryExecutor)
+            throws SQLException
+    {
+        String url = format("jdbc:presto://%s", coordinatorServer.getAddress());
         uri = new PrestoDriverUri(url, uri.getProperties());
         uri = requireNonNull(uri, "uri is null");
 
@@ -265,12 +268,6 @@ public class PrestoConnection
             throws SQLException
     {
         try {
-            // close bogus presto server
-            try {
-                server.close();
-            }
-            catch (Exception ignored) {
-            }
             if (!closed.get() && (transactionId.get() != null)) {
                 try (PrestoStatement statement = new PrestoStatement(this)) {
                     statement.internalExecute("ROLLBACK");

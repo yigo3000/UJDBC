@@ -17,6 +17,7 @@ import com.facebook.airlift.log.Logger;
 import com.facebook.presto.Session;
 import com.facebook.presto.plugin.dm.DMPlugin;
 import com.facebook.presto.plugin.mysql.MySqlPlugin;
+import com.facebook.presto.plugin.oceanbase.OceanBasePlugin;
 import com.facebook.presto.plugin.oracle.OraclePlugin;
 import com.facebook.presto.plugin.sqlserver.SqlServerPlugin;
 import com.facebook.presto.server.testing.TestingPrestoServer;
@@ -37,9 +38,29 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class BogusPrestoServer
 {
-    private static final Logger log = Logger.get(BogusPrestoServer.class);
-    public DistributedQueryRunner queryRunner;
-    public TestingPrestoServer get_BogusPrestoServer() throws Exception
+    private static final BogusPrestoServer INSTANCE;
+    private static final Logger log ;
+    static {
+        try {
+            log = Logger.get(BogusPrestoServer.class);
+            INSTANCE = new BogusPrestoServer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private final DistributedQueryRunner queryRunner;  //Bogus PrestoServer
+    private final TestingPrestoServer testingPrestoServer; //Coordinator of Presto
+
+    public static BogusPrestoServer getInstance() {
+
+        return INSTANCE;
+    }
+
+    public TestingPrestoServer getTestingPrestoServer() {
+        return testingPrestoServer;
+    }
+
+    public BogusPrestoServer() throws Exception
     {
         Session session = testSessionBuilder()
                 .setCatalog("bogus")
@@ -50,7 +71,7 @@ public class BogusPrestoServer
         queryRunner.installPlugin(new OraclePlugin()); // 安装Oracle插件，用于访问Oracle数据库
         queryRunner.installPlugin(new SqlServerPlugin()); // 安装SqlServer插件，用于访问SqlServer数据库
         queryRunner.installPlugin(new DMPlugin());
-        queryRunner.createCatalog("dm1", "dm", ImmutableMap.of("connection-url", "jdbc:dm://localhost:5236", "connection-user", "SYSDBA", "connection-password", "SYSDBA_dm001"));
+        queryRunner.installPlugin(new OceanBasePlugin());
 //        StaticCatalogStore
         try {
             loadAllPropertiesFiles(BogusPrestoServer.class.getClassLoader());
@@ -58,7 +79,7 @@ public class BogusPrestoServer
         catch (IOException e) {
             log.error("Error loadAllPropertiesFiles: " + e.getMessage());
         }
-        return queryRunner.getCoordinator();
+        testingPrestoServer = queryRunner.getCoordinator();
     }
     private void loadAllPropertiesFiles(ClassLoader classLoader) throws IOException, URISyntaxException
     {

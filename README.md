@@ -67,3 +67,5 @@ connection-password=xxx
     <groupId>com.facebook.presto</groupId>
     <artifactId>presto-sqlserver</artifactId>
 </dependency>
+## 已知问题
+1. 保持连接一会后会断开，估计是虚拟服务器对象被释放了。已改完待测。
