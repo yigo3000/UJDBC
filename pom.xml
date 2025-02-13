@@ -54,6 +54,13 @@
 <!--            <artifactId>dm-jdbc-driver-18-x86</artifactId>-->
             <version>8.1.3.140</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>${dep.oracle.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.facebook.presto</groupId>
             <artifactId>presto-base-jdbc</artifactId>
@@ -71,10 +78,10 @@
             <artifactId>javax.inject</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.facebook.presto</groupId>
-            <artifactId>presto-oracle</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.facebook.presto</groupId>-->
+<!--            <artifactId>presto-oracle</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.facebook.presto</groupId>
