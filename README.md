@@ -20,7 +20,7 @@ The build command is as follows:
 
 # 通用JDBC驱动
 一个通用的JDBC驱动，可同时连接多种类型数据源，支持联邦查询（跨数据库的表之间做关联）。使用者只需要建立一个连接，就可以查询多个数据库。
-当前已经测试过Mysql、Oracle、SQLServer数据库。
+当前已经测试过Mysql、Oracle、SQLServer、达梦、OceanBase数据库。
 
 当初始化一个新的JDBC连接时，本驱动将会在进程内创建一个虚拟的Presto服务器，约使用400-500MB内存。虚拟服务器的生存周期与JDBC连接相同。
 第一次连接时，在CPU i5-1135G7上需要约4秒钟。
@@ -68,4 +68,4 @@ connection-password=xxx
     <artifactId>presto-sqlserver</artifactId>
 </dependency>
 ## 已知问题
-1. 保持连接一会后会断开，估计是虚拟服务器对象被释放了。已改完待测。
+1. 在DBeaver中访问Oracle数据库时（我仅测试了11C），第一次查询后会花费10分钟左右时间访问元数据，此期间一直卡住不动。此后一切正常。
