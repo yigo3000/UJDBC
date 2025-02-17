@@ -69,3 +69,6 @@ connection-password=xxx
 </dependency>
 ## 已知问题
 1. 在DBeaver中访问Oracle数据库时（我仅测试了11C），第一次查询后会花费10分钟左右时间访问元数据，此期间一直卡住不动。此后一切正常。
+Support DM, OceanBase.
+Correct some bugs.
+The presto-oracle has a bug: if scale is larger than precision, it fails. For Oracle 11C, I found this situation actrually exists.
